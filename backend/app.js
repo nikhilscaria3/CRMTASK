@@ -10,8 +10,16 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, "./config.env") });
 
 
+app.use(cors({
 
-app.use(cors())
+  origin: ["https://crmtask-arwx.vercel.app/"],
+  methods: ["POST", "GET","PUT","DELETE"] ,
+  credentials: true
+
+}
+))
+
+
 app.use(bodyparser.json());
 connectDB()
 app.use(logger('dev'));
