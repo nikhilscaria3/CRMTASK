@@ -1,0 +1,187 @@
+/* Signup.css */
+
+body {
+  margin: 0;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+}
+
+.maincontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(to right, #83a4d4, #b6fbff);
+}
+
+.divisioncontainer {
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  gap: 2rem;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  margin-top: 3rem;
+}
+
+.signupcontainer {
+
+  margin: auto;
+  gap: 2rem;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 800px;
+  overflow: hidden;
+  padding: 5rem;
+  margin-top: 5rem;
+}
+
+.signupheading {
+  color: #1e1f1f;
+  font-size: 2em;
+}
+
+.signuptitle {
+  text-align: center;
+  font-family: fantasy;
+}
+
+.formonesideinfo {
+  margin-top: 10vh;
+}
+
+.formoneside,
+.formsecondside {
+  padding: 2px;
+  text-align: center;
+}
+
+.formoneside h1 {
+  font-size: 3em;
+  display: flex;
+  justify-content: center;
+
+}
+
+.formoneside span {
+  color: #555;
+}
+
+/* Add these styles to your CSS file */
+
+.hirestyle {
+  font-size: 2.5em; /* Adjust the font size as needed */
+  color: #3498db; /* Adjust the color as needed */
+  text-align: center;
+  margin-bottom: 20px; /* Adjust the margin as needed */
+}
+
+.instyle {
+  color: #0cb9fd; /* Adjust the color as needed */
+  font-weight: bold;
+}
+
+/* Optional: Add text shadow for a stylish effect */
+
+
+/* Optional: Hover effect */
+.hirestyle {
+  color: #000000;
+  font-weight: 500; /* Adjust the hover color as needed */
+}
+
+
+.signupform {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
+}
+
+.emaillabel,
+.passwordlabel,
+.confirmpasswordlabel {
+  margin-top: 10px;
+  color: #333;
+  font-weight: 700;
+}
+
+input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #0f0e0e;
+  border-radius: 4px;
+  width: 16rem;
+  box-sizing: border-box;
+}
+
+input:hover {
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px groove #2b2a2a;
+  border-radius: 4px;
+  width: 16rem;
+  box-sizing: border-box;
+}
+
+.signupbutton {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease;
+}
+
+.signupbutton:hover {
+  background-color: #45a049;
+}
+
+.bottomend {
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-decoration: none;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .divisioncontainer {
+    flex-direction: column;
+    margin: auto;
+    gap: 2re;
+  }
+
+  .signupcontainer {
+    margin: auto;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  .formonesideinfo {
+    margin-top: auto;
+  }
+
+
+
+}
+
+@media screen and (max-width: 480px) {
+
+  .formoneside,
+  .formsecondside {
+    padding: 1px;
+  }
+
+  .formoneside h1 {
+    font-size: 1.5em;
+  }
+}

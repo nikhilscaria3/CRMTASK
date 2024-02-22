@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import Login from "./Components/LoginComponent";
+import Signup from "./Components/SignupComponent";
+import Homepage from "./Components/HomePage";
+import AccountInfo from "./Components/AccountInfo";
+import { isAuthenticated } from "./Auth/UserAuth"; // Import the isAuthenticated function
+import Customers from "./Components/CustomerComponent";
+import ComplaintForm from "./Components/TicketComponent";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const PrivateRoute = ({ element, ...rest }) => {
+  return isAuthenticated() ? (
+    <Route {...rest} element={element} />
+  ) : (
+    <Navigate to="/login" />
   );
-}
+};
+
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Signup />} />
+        <Route
+          path="/homepage"
+          element={<Homepage />}
+        />
+        <Route
+          path="/accountinfo"
+          element={<AccountInfo />}
+        />
+        <Route
+          path="/customers" element={<Customers />} />
+
+        <Route path="/ticket" element={<ComplaintForm />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
