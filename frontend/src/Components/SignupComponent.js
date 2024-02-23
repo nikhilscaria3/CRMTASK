@@ -52,7 +52,7 @@ function Signup() {
         <div className='divisioncontainer'>
           <div className='formoneside'>
             <div className='formonesideinfo'>
-              <h1 className='hirestyle'>Latisfy<p className='instyle'>CRM</p></h1>
+              <h1 className='hirestyle'>Latsify<p className='instyle'>CRM</p></h1>
               <p>Welcome aboard to Connect People</p>
               <p>{message}</p>
             </div>
