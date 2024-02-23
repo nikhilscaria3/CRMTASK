@@ -11,10 +11,6 @@ const dotenv = require('dotenv');
 dotenv.config({ path: path.join(__dirname, "../backend/config/config.env") });
 
 
-
-if (process.env.NODE_ENV !== 'production') {
-  app.use(cors())
-} else {
   app.use(cors({
 
     origin: ["https://crmtask-arwx.vercel.app/"],
@@ -23,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 
   }
   ))
-}
+
 
 
 
