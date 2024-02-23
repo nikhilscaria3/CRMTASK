@@ -13,7 +13,7 @@ dotenv.config({ path: path.join(__dirname, "../backend/config/config.env") });
 
   app.use(cors({
 
-    origin: ["https://crmtask-arwx.vercel.app/"],
+    origin: ["https://crmtask-arwx.vercel.app"],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true
 
