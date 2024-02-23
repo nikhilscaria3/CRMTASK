@@ -52,7 +52,8 @@
 }
 
 .modal-content {
-    width: 800px; /* Set the width as per your requirement */
+    width: 800px;
+    /* Set the width as per your requirement */
 }
 
 .twomodalcontainer {
@@ -60,10 +61,20 @@
     margin: auto;
 }
 
-.onesidecontainer,
+.onesidecontainer {
+    background-color: #ddd9d9;
+    flex: 1;
+    padding: 10px;
+}
+
 .secondsidecontainer {
     flex: 1;
     padding: 10px;
+
+}
+
+.dropdown {
+    margin: auto;
 }
 
 /* just padding or any other styles as needed */
