@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const baseURL = "https://crmtask.vercel.app/";
+// const baseURL = "https://crmtask.vercel.app/";
 
+const baseURL2 = "https://crmtask.vercel.app";
  const axiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL: baseURL2,
 });
 
 

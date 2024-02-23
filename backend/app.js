@@ -2,22 +2,30 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
+const mongoose = require('mongoose');
 const app = express();
 const cors = require("cors")
 const bodyparser = require("body-parser")
 const connectDB = require("./Database/DB")
 const dotenv = require('dotenv');
-dotenv.config({ path: path.join(__dirname, "./config.env") });
+dotenv.config({ path: path.join(__dirname, "../backend/config/config.env") });
 
 
-app.use(cors({
 
-  origin: ["https://crmtask-arwx.vercel.app/"],
-  methods: ["POST", "GET","PUT","DELETE"] ,
-  credentials: true
+if (process.env.NODE_ENV !== 'production') {
+  app.use(cors())
+} else {
+  app.use(cors({
 
+    origin: ["https://crmtask-arwx.vercel.app/"],
+    methods: ["POST", "GET", "PUT", "DELETE"],
+    credentials: true
+
+  }
+  ))
 }
-))
+
+
 
 
 app.use(bodyparser.json());
@@ -25,6 +33,7 @@ connectDB()
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 const authRoutes = require('./routes/users');
