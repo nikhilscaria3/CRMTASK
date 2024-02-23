@@ -57,6 +57,57 @@ const customerSchema = new mongoose.Schema({
 });
 
 
+const employeeSchema = new mongoose.Schema({
+    employeeName: {
+        type: String,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    },
+    phoneNumber:
+    {
+        type: Number,
+        required: true
+    }
+    ,
+    emailAddress:
+    {
+        type: String,
+        required: true
+    }
+    ,
+    companyName: {
+        type: String,
+        required: true
+    },
+    domain: {
+        type: String,
+        required: true
+    },
+    workmode: {
+        type: String,
+        required: true
+    },
+    salary:
+    {
+        type: Number,
+        required: true
+    },
+    location: {
+        type: String,
+        required: true
+    },
+    status:{
+        type:String,
+        required:true,
+        default:"Active"
+    }
+
+});
+
+
 
 const ComplaintSchema = new mongoose.Schema({
     // Your existing fields for the Complaint model
@@ -70,11 +121,11 @@ const ComplaintSchema = new mongoose.Schema({
     },
     subject: {
         type: String,
-        required: true
+        required: true,
     },
     status: {
         type: String,
-        default: "Ticket Created"
+        default: "Ticket Created",
     },
     ticketnumber: {
         type: Number,
@@ -97,6 +148,7 @@ const ComplaintSchema = new mongoose.Schema({
             status: {
                 type: String,
                 enum: ['Ticket Checked', 'Ticket On-Progress', 'Ticket Denied', 'Ticket Resolved'],
+                default: 'Ticket Checked', // Set the default status to a valid enum value
                 required: true,
             },
             createdAt: {
@@ -108,10 +160,10 @@ const ComplaintSchema = new mongoose.Schema({
 });
 
 
-
+const Employee = mongoose.model('Employee', employeeSchema);
 const Complaint = mongoose.model('Complaint', ComplaintSchema);
 
 const Customer = mongoose.model('Customer', customerSchema);
 const User = mongoose.model("User", UserSchema)
 
-module.exports = { User, Customer, Complaint };
+module.exports = { User, Customer, Complaint, Employee };

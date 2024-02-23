@@ -3,79 +3,86 @@ import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent"
 import { axiosInstance, setAuthToken } from "../util/baseurl"
 import '../Styles/Customers.css'
 
-const Customers = () => {
-    const [customersList, setCustomersList] = useState([])
-    const [selectedCustomer, setSelectedCustomer] = useState(null)
+const Employees = () => {
+    const [employeesList, setemployeesList] = useState([])
+    const [selectedemployee, setSelectedemployee] = useState(null)
     const [operation, setoperation] = useState(null)
-    const [newCustomer, setNewCustomer] = useState({
-        fullName: '',
+    const [newemployee, setNewemployee] = useState({
+        employeename: '',
         address: '',
         phoneNumber: '',
         emailAddress: '',
         companyName: '',
-        industry: '',
-        size: '',
-        location: ""
+        domain: '',
+        wordmode: '',
+        salary: '',
+        location: "",
+        status: ''
     })
     const modalRef = useRef(null)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewCustomer(prevCustomer => ({ ...prevCustomer, [name]: value }))
+        setNewemployee(prevemployee => ({ ...prevemployee, [name]: value }))
     }
 
     const handleSubmit = async () => {
         try {
-            if (selectedCustomer) {
-                // Update customer
-                const response = await axiosInstance.put(`/api/customers/${selectedCustomer._id}`, {
-                    ...newCustomer
+            if (selectedemployee) {
+                // Update employee
+                const response = await axiosInstance.put(`/api/employees/${selectedemployee._id}`, {
+                    ...newemployee
                 });
 
                 if (response.ok) {
-                    const updatedCustomer = await response.json();
-                    const updatedCustomersList = customersList.map(customer => {
-                        if (customer._id === updatedCustomer._id) {
-                            return updatedCustomer;
+                    const updatedemployee = await response.json();
+                    const updatedemployeesList = employeesList.map(employee => {
+                        if (employee._id === updatedemployee._id) {
+                            return updatedemployee;
                         } else {
-                            return customer;
+                            return employee;
                         }
                     });
-                    setCustomersList(updatedCustomersList);
-                    setSelectedCustomer(null);
+                    setemployeesList(updatedemployeesList);
+                    setSelectedemployee(null);
                     if (modalRef.current) {
                         modalRef.current.handleClose();
                     }
                 }
             } else {
-                // Create customer
-                const { fullName,
+                // Create employee
+                const {
+                    employeename,
                     address,
                     phoneNumber,
                     emailAddress,
                     companyName,
-                    industry,
-                    size,
-                    location } = newCustomer
+                    domain,
+                    wordmode,
+                    salary,
+                    location,
+                    status } = newemployee
 
-                const response = await axiosInstance.post('/api/customers', {
-                    fullName,
+                const response = await axiosInstance.post('/api/employees', {
+                    employeename,
                     address,
                     phoneNumber,
                     emailAddress,
                     companyName,
-                    industry,
-                    size,
-                    location
+                    domain,
+                    wordmode,
+                    salary,
+                    location,
+                    status
                 });
 
                 if (response) {
-                    const createdCustomer = await response.json();
-                    setCustomersList([...customersList, createdCustomer]);
+                    const createdemployee = await response.json();
+                    setemployeesList([...employeesList, createdemployee]);
                 }
             }
         } catch (error) {
-            console.error('Error creating/updating customer:', error);
+            console.error('Error creating/updating employee:', error);
         }
     }
 
@@ -83,14 +90,14 @@ const Customers = () => {
     const [limit, setLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
 
-    const fetchCustomers = async () => {
+    const fetchemployees = async () => {
         try {
-            const response = await axiosInstance.get(`/api/customers?page=${page}&limit=${limit}`);
+            const response = await axiosInstance.get(`/api/employees?page=${page}&limit=${limit}`);
             const data = response.data;
-            setCustomersList(data.customerData);
+            setemployeesList(data.employeeData);
             setTotalPages(data.totalPages);
         } catch (error) {
-            console.error('Error fetching customers:', error);
+            console.error('Error fetching employees:', error);
         }
     };
 
@@ -107,44 +114,45 @@ const Customers = () => {
     };
 
     useEffect(() => {
-        fetchCustomers();
+        fetchemployees();
     }, [page, limit]);
 
 
 
-    const handleDelete = async (customer) => {
+    const handleDelete = async (employee) => {
         try {
-            const response = await axiosInstance.delete('/api/deletecustomer', {
-                data: { email: customer.emailAddress } // Fix here
-            });
-
-            if (response.status === 200) {
-                const updatedCustomersList = customersList.filter(cust => cust._id !== customer._id);
-                setCustomersList(updatedCustomersList);
-                setSelectedCustomer(null);
-                setSelectedCustomer(null);
+         
+            const response = await axiosInstance.delete(`/api/deleteemployee/${employee.emailAddress}`);
+            // Use the correct endpoint for deletion and pass the email address as a parameter
+    
+            if (response) {
+                const updatedemployeesList = employeesList.filter(cust => cust._id !== employee._id);
+                setemployeesList(updatedemployeesList);
+                setSelectedemployee(null);
                 if (modalRef.current) {
                     modalRef.current.handleClose();
                 }
             } else {
-                console.error('Error deleting customer:', response.data.message);
+                console.error('Error deleting employee:', response.data.message);
             }
         } catch (error) {
-            console.error('Error deleting customer:', error);
+            console.error('Error deleting employee:', error);
         }
     };
-
+    
 
     const handleAddUserClick = () => {
-        setNewCustomer({
-            fullName: '',
+        setNewemployee({
+            employeename: '',
             address: '',
             phoneNumber: '',
             emailAddress: '',
             companyName: '',
-            industry: '',
-            size: '',
-            location: ""
+            domain: '',
+            wordmode: '',
+            salary: '',
+            location: "",
+            status: ''
         })
         setoperation("Add User")
     }
@@ -168,36 +176,48 @@ const Customers = () => {
                             <form onSubmit={handleSubmit}>
                                 <div class="form-group">
                                     <label class="form-label" for="fullName">Name</label>
-                                    <input type='text' class="form-input" name='fullName' onChange={handleInputChange} placeholder='Name' value={newCustomer.fullName} />
+                                    <input type='text' class="form-input" name='fullName' onChange={handleInputChange} placeholder='Name' value={newemployee.fullName} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="address">Address</label>
-                                    <input type='text' class="form-input" name='address' onChange={handleInputChange} placeholder='Address' value={newCustomer.address} />
+                                    <input type='text' class="form-input" name='address' onChange={handleInputChange} placeholder='Address' value={newemployee.address} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="phoneNumber">Phone Number</label>
-                                    <input type='text' class="form-input" name='phoneNumber' onChange={handleInputChange} placeholder='Phone Number' value={newCustomer.phoneNumber} />
+                                    <input type='text' class="form-input" name='phoneNumber' onChange={handleInputChange} placeholder='Phone Number' value={newemployee.phoneNumber} />
                                     <label class="form-label" for="emailAddress">Email Address</label>
-                                    <input type='text' class="form-input" name='emailAddress' onChange={handleInputChange} placeholder='Email Address' value={newCustomer.emailAddress} />
+                                    <input type='text' class="form-input" name='emailAddress' onChange={handleInputChange} placeholder='Email Address' value={newemployee.emailAddress} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="companyName">Company Name</label>
-                                    <input type='text' class="form-input" name='companyName' onChange={handleInputChange} placeholder='Company Name' value={newCustomer.companyName} />
-                                    <label class="form-label" for="size">Size</label>
-                                    <input type='text' class="form-input" name='size' onChange={handleInputChange} placeholder='Size' value={newCustomer.size} />
+                                    <input type='text' class="form-input" name='companyName' onChange={handleInputChange} placeholder='Company Name' value={newemployee.companyName} />
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="industry">Industry</label>
-                                    <input type='text' class="form-input" name='industry' onChange={handleInputChange} placeholder='Industry' value={newCustomer.industry} />
+                                    <label class="form-label" for="industry">Domain</label>
+                                    <input type='text' class="form-input" name='domain' onChange={handleInputChange} placeholder='Domain' value={newemployee.domain} />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="workmode">Work Mode</label>
+                                    <input type='text' class="form-input" name='workmode' onChange={handleInputChange} placeholder='Work Mode' value={newemployee.workmode} />
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="salary">Salary</label>
+                                    <input type='text' class="form-input" name='salary' onChange={handleInputChange} placeholder='Salary' value={newemployee.salary} />
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="form-label" for="size">Location</label>
-                                    <input type='text' class="form-input" name='location' onChange={handleInputChange} placeholder='Location' value={newCustomer.location} />
+                                    <label class="form-label" for="location">Location</label>
+                                    <input type='text' class="form-input" name='location' onChange={handleInputChange} placeholder='Location' value={newemployee.location} />
                                 </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="status">Status</label>
+                                    <input type='text' class="form-input" name='status' onChange={handleInputChange} placeholder='Status' value={newemployee.status} />
+                                </div>
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save changes</button>
@@ -219,25 +239,28 @@ const Customers = () => {
                             <th>Phone Number</th>
                             <th>Email Address</th>
                             <th>Company Name</th>
-                            <th>Industry</th>
-                            <th>Size</th>
+                            <th>Domain</th>
+                            <th>WorkMode</th>
+                            <th>Salary</th>
                             <th>Location</th>
-                            <th>Action</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {customersList.map((customer, index) => (
-                            <tr key={customer._id}>
+                        {employeesList.map((employee, index) => (
+                            <tr key={employee._id}>
                                 <td>{(page - 1) * limit + index + 1}</td>
-                                <td>{customer.fullName}</td>
-                                <td>{customer.address}</td>
-                                <td>{customer.phoneNumber}</td>
-                                <td>{customer.emailAddress}</td>
-                                <td>{customer.companyName}</td>
-                                <td>{customer.industry}</td>
-                                <td>{customer.size}</td>
-                                <td>{customer.location}</td>
+                                <td>{employee.employeename}</td>
+                                <td>{employee.address}</td>
+                                <td>{employee.phoneNumber}</td>
+                                <td>{employee.emailAddress}</td>
+                                <td>{employee.companyName}</td>
+                                <td>{employee.domain}</td>
+                                <td>{employee.workmode}</td>
+                                <td>{employee.salary}</td>
+                                <td>{employee.location}</td>
+                                <td>{employee.status}</td>
                                 <td>
                                     <button
                                         type="button"
@@ -245,16 +268,18 @@ const Customers = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
                                         onClick={() => {
-                                            setSelectedCustomer(customer);
-                                            setNewCustomer({
-                                                fullName: customer.fullName,
-                                                address: customer.address,
-                                                phoneNumber: customer.phoneNumber,
-                                                emailAddress: customer.emailAddress,
-                                                companyName: customer.companyName,
-                                                industry: customer.industry,
-                                                size: customer.size,
-                                                location: customer.location,
+                                            setSelectedemployee(employee);
+                                            setNewemployee({
+                                                fullName: employee.employeename,
+                                                address: employee.address,
+                                                phoneNumber: employee.phoneNumber,
+                                                emailAddress: employee.emailAddress,
+                                                companyName: employee.companyName,
+                                                domain: employee.domain,
+                                                workmode: employee.workmode,
+                                                salary: employee.salary,
+                                                location: employee.location,
+                                                status: employee.status
                                             });
                                             setoperation("Update User");
                                         }}
@@ -269,7 +294,6 @@ const Customers = () => {
                                         Delete
                                     </button>
 
-
                                     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -282,7 +306,8 @@ const Customers = () => {
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(customer)}>Delete</button>
+                                                  
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(employee)}>Delete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -302,4 +327,4 @@ const Customers = () => {
     )
 }
 
-export default Customers
+export default Employees

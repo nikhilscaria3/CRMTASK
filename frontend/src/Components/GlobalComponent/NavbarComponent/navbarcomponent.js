@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import './navbarcomponent.css'
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
+    
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
@@ -21,7 +22,7 @@ const Navbar = () => {
                 </button>
 
                 {/* Brand */}
-                <a className="navbar-brand" href="#">
+                <a className="navbar-brand" href="/homepage">
                     <h1 className='navhirestyle'>Latsify<span className='navinstyle'>CRM</span></h1>
                 </a>
 
@@ -34,22 +35,53 @@ const Navbar = () => {
                     <div className="offcanvas-body">
                         <ul className="navbar-nav">
                             <li className="nav-item">
-                                <Link className="nav-link" to="/customers">Customers</Link>
+                                <NavLink
+                                    exact
+                                    to="/clients"
+                                    activeClassName="active-customer"
+                                    className="nav-link"
+                                >
+                                    Clients
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/companies">Companies</Link>
+                                <NavLink
+                                    exact
+                                    to="/companies"
+                                    activeClassName="active-ticket"
+                                    className="nav-link"
+                                >
+                                    Companies
+                                </NavLink>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/ticket">Tickets</Link>
+                                <NavLink
+                                    exact
+                                    to="/employee"
+                                    activeClassName="active-ticket"
+                                    className="nav-link"
+                                >
+                                    Employee
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink
+                                    exact
+                                    to="/ticket"
+                                    activeClassName="active-ticket"
+                                    className="nav-link"
+                                >
+                                    Tickets
+                                </NavLink>
                             </li>
                         </ul>
+
                     </div>
                 </div>
 
                 {/* Search Form */}
                 <form className="d-flex ms-auto">
                     <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-                    <button className="btn btn-outline-success" type="submit">Search</button>
                 </form>
 
                 {/* Account Dropdown */}

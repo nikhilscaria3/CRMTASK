@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import '../Styles/AccountInfo.css';
 import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent";
 import { axiosInstance, setAuthToken } from "../util/baseurl";
@@ -6,19 +6,24 @@ import '../Styles/ticket.css';
 
 const ComplaintForm = () => {
     const [complaints, setcomplaintdata] = useState([]);
+    const [replies, setReplies] = useState([]);
     const [replyModalVisible, setReplyModalVisible] = useState(false);
+
     const [newComplaint, setnewcomplaint] = useState({
         email: '',
         subject: "",
         description: '',
-        status: "Ticket Created"
+        ticketnumber: ''
     });
 
     const [replyData, setreplydata] = useState({
         email: '',
+        status: "",
         description: '',
-        status: " ",
+        ticketnumber: ''
     });
+
+    const modalRef = useRef(null);
 
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
@@ -32,6 +37,7 @@ const ComplaintForm = () => {
             const response = await axiosInstance.get(`/api/complaint?page=${page}&limit=${limit}`);
             const data = response.data;
             setTotalPages(data.totalPages);
+            console.log(data.complaintsdata);
             setcomplaintdata(data.complaintsdata); // Changed "complaintdata" to "complaints" to match the key in the response data
         } catch (error) {
             console.error('Error fetching complaints:', error);
@@ -60,6 +66,7 @@ const ComplaintForm = () => {
             email: '',
             subject: "",
             description: '',
+            ticketnumber: ''
 
         })
     }
@@ -70,9 +77,14 @@ const ComplaintForm = () => {
             description: data.description,
             subject: data.subject,
             status: data.status,
+            ticketnumber: data.ticketnumber,
             createdAt: data.createdAt,
 
         });
+        setreplydata({
+            email: data.email,
+            ticketnumber: data.ticketnumber
+        })
     };
 
     const handleInputChange = (e) => {
@@ -80,7 +92,9 @@ const ComplaintForm = () => {
         setnewcomplaint(prevCustomer => ({ ...prevCustomer, [name]: value }));
     };
 
-
+    const closeModal = () => {
+        modalRef.current.setAttribute("data-bs-target", "");
+    };
 
     const handleInputReplyChange = (e) => {
         const { name, value } = e.target;
@@ -88,38 +102,69 @@ const ComplaintForm = () => {
     };
 
 
+    const handleRepliesData = async (data) => {
+        const email = data.email;
+        try {
+            const response = await axiosInstance.get('/api/replies', {
+                params: { email }, // Use the 'params' option to send the email as a query parameter
+            });
+            const responsedata = response.data;
+            setReplies(responsedata.replydata);
+            setReplyModalVisible(true);
+        } catch (error) {
+            console.error('Error fetching replies:', error);
+        }
+    };
+    
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const { email, description, subject } = newComplaint; // Renamed "complaint" to "newComplaint"
+        const { email, description, subject } = newComplaint;
+
         try {
             const response = await axiosInstance.post('/api/complaint', {
                 email,
                 description,
                 subject
-
             });
-            console.log(response.data); // Handle success or display a confirmation to the user
+
+            if (response) {
+                const createdComplaint = await response.json();
+                setcomplaintdata(prevComplaints => [...prevComplaints, createdComplaint]);
+                setnewcomplaint({
+                    email: '',
+                    subject: "",
+                    description: '',
+                    status: "Ticket Created",
+                });
+                closeModal();
+            }
         } catch (error) {
             console.error('Error submitting complaint:', error);
         }
-    };
+    }
 
     const handleReplySubmit = async (e) => {
-        e.preventDefault();
-        const { email, description, status } = newComplaint; // Renamed "complaint" to "newComplaint"
+        e.preventDefault(); // Prevent the form submission
+
+        const { description, status, email, ticketnumber } = replyData;
+
         try {
             const response = await axiosInstance.post('/api/reply', {
                 email,
                 description,
-                status
-
+                status,
+                ticketnumber
             });
+
             console.log(response.data); // Handle success or display a confirmation to the user
+
+            // Optionally, you can update the state or handle other UI updates here
+
+            // Close the reply modal
+            setReplyModalVisible(false);
         } catch (error) {
             console.error('Error submitting reply:', error);
         }
     };
-
 
 
     return (
@@ -127,7 +172,14 @@ const ComplaintForm = () => {
             <Navbar />
 
 
-            <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleComplaint}>
+            <button
+                type="button"
+                className="btn btn-primary mx-auto d-block me-auto"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                ref={modalRef}
+                onClick={handleComplaint}
+            >
                 Raise a complaint
             </button>
 
@@ -176,7 +228,7 @@ const ComplaintForm = () => {
                                 <th>Email</th>
                                 <th>Subject</th>
                                 <th>Date</th>
-                                <th>Status</th>
+                                <th>Current Status</th>
                                 <th>Ticket Number</th>
                                 <th>Description</th>
                                 <th>Action</th>
@@ -188,10 +240,20 @@ const ComplaintForm = () => {
                                     <td>{(page - 1) * limit + index + 1}</td>
                                     <td>{data.email}</td>
                                     <td>{data.subject}</td>
-                                    <td>{data.createdAt}</td>
+                                    <td>{new Date(data.createdAt).toLocaleString()}</td>
                                     <td>{data.status}</td>
                                     <td>{data.ticketnumber}</td>
                                     <td>{data.description}</td>
+                                    <td>   <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#repliesModal"
+                                        onClick={() => handleRepliesData(data)}
+                                    >
+                                        Replies
+                                    </button>
+                                    </td>
                                     <td><button
                                         type="button"
                                         className="btn btn-primary mx-auto d-block"
@@ -235,24 +297,24 @@ const ComplaintForm = () => {
                                 <div className="secondsidecontainer">
                                     <div class="form-group">
                                         <label class="form-label" for="Email">Email</label>
-                                        <input type='text' class="form-input" name='email' placeholder='Email' value={newComplaint.email} />
+                                        <input type='text' class="form-input" name='email' placeholder='Email' value={newComplaint.email} disabled />
                                         {/* Changed "Email" to "email" to match the state */}
                                     </div>
 
                                     <div class="form-group">
                                         <label class="form-label" for="subject">Subject</label>
-                                        <textarea class="form-input" name='subject' placeholder='Subject' value={newComplaint.subject} />
+                                        <textarea class="form-input" name='subject' placeholder='Subject' value={newComplaint.subject} disabled />
                                         {/* Changed "Complaint" to "description" to match the state */}
                                     </div>
 
                                     <div class="form-group">
                                         <label class="form-label" for="complaint">Complaint</label>
-                                        <textarea class="form-input" name='description' placeholder='Complaint' rows={10} cols={10} value={newComplaint.description} />
+                                        <textarea class="form-input" name='description' placeholder='Complaint' rows={10} cols={10} value={newComplaint.description} disabled />
                                         {/* Changed "Complaint" to "description" to match the state */}
                                     </div>
                                     <div class="form-group">
                                         <label class="form-label" for="status">Current Status</label>
-                                        <input type='text' class="form-input" name='status' placeholder='Status' value={newComplaint.status} />
+                                        <input type='text' class="form-input" name='status' placeholder='Status' value={newComplaint.status} disabled />
                                         {/* Changed "Email" to "email" to match the state */}
                                     </div>
                                 </div>
@@ -263,13 +325,19 @@ const ComplaintForm = () => {
                                     <form onSubmit={handleReplySubmit}>
                                         <div class="form-group">
                                             <label class="form-label" for="Email">Email</label>
-                                            <input type='text' class="form-input" name='email' onChange={handleInputReplyChange} placeholder='Email' value={replyData.email} />
+                                            <input type='text' class="form-input" name='email' placeholder='Email' value={newComplaint.email} disabled />
                                             {/* Changed "Email" to "email" to match the state */}
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="form-label" for="complaint">Reply</label>
+                                            <label class="form-label" for="description">Reply</label>
                                             <textarea class="form-input" name='description' onChange={handleInputReplyChange} placeholder='Reply' rows={10} cols={10} value={replyData.description} />
+                                            {/* Changed "Complaint" to "description" to match the state */}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-label" for="ticketnumber">Ticket Number</label>
+                                            <input class="form-input" name='ticketnumber' placeholder='ticketnumber' value={newComplaint.ticketnumber} disabled />
                                             {/* Changed "Complaint" to "description" to match the state */}
                                         </div>
 
@@ -281,14 +349,14 @@ const ComplaintForm = () => {
                                                     data-bs-toggle="dropdown"
                                                     aria-expanded="false"
                                                 >
-                                                    {replyData.status ? "Status" : replyData.status}
+                                                    {replyData ? "Status" : replyData.status}
                                                 </button>
                                                 <ul className="dropdown-menu">
                                                     <li>
                                                         <button
                                                             className="dropdown-item"
                                                             href="#"
-                                                            onClick={() => setreplydata({ status: "Ticket Checked" })}
+                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Checked" })}
                                                         >
                                                             Ticket Checked
                                                         </button>
@@ -297,7 +365,7 @@ const ComplaintForm = () => {
                                                         <button
                                                             className="dropdown-item"
                                                             href="#"
-                                                            onClick={() => setreplydata({ status: "Ticket On-Progress" })}
+                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket On-Progress" })}
                                                         >
                                                             Ticket On-Progress
                                                         </button>
@@ -306,7 +374,7 @@ const ComplaintForm = () => {
                                                         <button
                                                             className="dropdown-item"
                                                             href="#"
-                                                            onClick={() => setreplydata({ status: "Ticket Denied" })}
+                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Denied" })}
                                                         >
                                                             Ticket Denied
                                                         </button>
@@ -315,7 +383,7 @@ const ComplaintForm = () => {
                                                         <button
                                                             className="dropdown-item"
                                                             href="#"
-                                                            onClick={() => setreplydata({ status: "Ticket Resolved" })}
+                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Resolved" })}
                                                         >
                                                             Ticket Resolved
                                                         </button>
@@ -332,14 +400,56 @@ const ComplaintForm = () => {
 
                                 </div>
 
-
-
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+            <div className="modal fade" id="repliesModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Replies List</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            {replies && replies.length > 0 ? (
+                                <ul>
+                                    {replies.map((reply, replyIndex) => (
+                                        <li key={replyIndex}>
+                                            <div>
+                                                <strong>Email:</strong> {reply.email}
+                                            </div>
+                                            <div>
+                                                <strong>Description:</strong> {reply.description}
+                                            </div>
+                                            <div>
+                                                <strong>Status:</strong> {reply.status}
+                                            </div>
+                                            <div>
+                                                <strong>Created At:</strong> {new Date(reply.createdAt).toLocaleString()}
+                                            </div>
+                                            <hr />
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No replies available.</p>
+                            )}
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
     );
 }

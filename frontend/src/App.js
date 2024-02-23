@@ -7,6 +7,7 @@ import AccountInfo from "./Components/AccountInfo";
 import { isAuthenticated } from "./Auth/UserAuth"; // Import the isAuthenticated function
 import Customers from "./Components/CustomerComponent";
 import ComplaintForm from "./Components/TicketComponent";
+import Employees from "./Components/EmployeeComponent";
 
 const PrivateRoute = ({ element, ...rest }) => {
   return isAuthenticated() ? (
@@ -32,7 +33,9 @@ const App = () => {
           element={<AccountInfo />}
         />
         <Route
-          path="/customers" element={<Customers />} />
+          path="/employee" element={<Employees />} />
+        <Route
+          path="/clients" element={<Customers />} />
 
         <Route path="/ticket" element={<ComplaintForm />} />
       </Routes>
