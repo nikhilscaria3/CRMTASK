@@ -22,7 +22,7 @@ const Navbar = () => {
 
                 {/* Brand */}
                 <a className="navbar-brand" href="#">
-                    <h1 className='navhirestyle'>Hire<span className='navinstyle'>in</span></h1>
+                    <h1 className='navhirestyle'>Latsify<span className='navinstyle'>CRM</span></h1>
                 </a>
 
                 {/* Offcanvas */}

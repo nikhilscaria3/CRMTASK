@@ -62,7 +62,7 @@ function Login() {
         <div className='divisioncontainer'>
           <div className='formoneside'>
             <div className='formonesideinfo'>
-              <h1 className='hirestyle'>Hire<p className='instyle'>in</p></h1>
+              <h1 className='hirestyle'>Latsify<p className='instyle'>CRM</p></h1>
               <p>Welcome aboard to Hire and Connect People</p>
               <p>{message}</p>
             </div>
