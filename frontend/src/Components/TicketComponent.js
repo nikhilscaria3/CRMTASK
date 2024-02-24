@@ -7,6 +7,7 @@ import '../Styles/ticket.css';
 const ComplaintForm = () => {
     const [complaints, setcomplaintdata] = useState([]);
     const [replies, setReplies] = useState([]);
+    const [buttonText, setButtonText] = useState("Reply");
     const [replyModalVisible, setReplyModalVisible] = useState(false);
 
     const [newComplaint, setnewcomplaint] = useState({
@@ -115,7 +116,7 @@ const ComplaintForm = () => {
             console.error('Error fetching replies:', error);
         }
     };
-    
+
     const handleSubmit = async (e) => {
         const { email, description, subject } = newComplaint;
 
@@ -141,13 +142,11 @@ const ComplaintForm = () => {
             console.error('Error submitting complaint:', error);
         }
     }
-
     const handleReplySubmit = async (e) => {
-        e.preventDefault(); // Prevent the form submission
-
         const { description, status, email, ticketnumber } = replyData;
 
         try {
+            // Assuming the '/api/reply' endpoint returns the updated reply data
             const response = await axiosInstance.post('/api/reply', {
                 email,
                 description,
@@ -155,12 +154,22 @@ const ComplaintForm = () => {
                 ticketnumber
             });
 
-            console.log(response.data); // Handle success or display a confirmation to the user
+            if (response) {
+                const updatedReply = response.data;
+
+                // Update the reply list
+                setReplies(prevReplies => [...prevReplies, updatedReply]);
+
+                // Set the button text to "Replied" and disable the button
+                setButtonText("Replied");
+            }
 
             // Optionally, you can update the state or handle other UI updates here
 
-            // Close the reply modal
-            setReplyModalVisible(false);
+            // Close the reply modal after a delay
+            setTimeout(() => {
+                setReplyModalVisible(false);
+            }, 1000);
         } catch (error) {
             console.error('Error submitting reply:', error);
         }
@@ -194,19 +203,19 @@ const ComplaintForm = () => {
                             <form onSubmit={handleSubmit}>
                                 <div class="form-group">
                                     <label class="form-label" for="Email">Email</label>
-                                    <input type='text' class="form-input" name='email' onChange={handleInputChange} placeholder='Email' value={newComplaint.email} />
+                                    <input type='text' class="form-input" name='email' onChange={handleInputChange} placeholder='Email' value={newComplaint.email} required />
                                     {/* Changed "Email" to "email" to match the state */}
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="subject">Subject</label>
-                                    <textarea class="form-input" name='subject' onChange={handleInputChange} placeholder='Subject' value={newComplaint.subject} />
+                                    <textarea class="form-input" name='subject' onChange={handleInputChange} placeholder='Subject' value={newComplaint.subject} required />
                                     {/* Changed "Complaint" to "description" to match the state */}
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="complaint">Complaint</label>
-                                    <textarea class="form-input" name='description' onChange={handleInputChange} placeholder='Complaint' rows={10} cols={10} value={newComplaint.description} />
+                                    <textarea class="form-input" name='description' onChange={handleInputChange} placeholder='Complaint' rows={10} cols={10} value={newComplaint.description} required />
                                     {/* Changed "Complaint" to "description" to match the state */}
                                 </div>
 
@@ -231,7 +240,7 @@ const ComplaintForm = () => {
                                 <th>Current Status</th>
                                 <th>Ticket Number</th>
                                 <th>Description</th>
-                                <th>Action</th>
+                                <th colSpan={2}>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -254,15 +263,16 @@ const ComplaintForm = () => {
                                         Replies
                                     </button>
                                     </td>
-                                    <td><button
-                                        type="button"
-                                        className="btn btn-primary mx-auto d-block"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#complaintModal"
-                                        onClick={() => handleReplyClick(data)}
-                                    >
-                                        View & Reply
-                                    </button>
+                                    <td>
+                                        {data.status !== "Ticket Resolved" ? <button
+                                            type="button"
+                                            className="btn btn-primary mx-auto d-block"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#complaintModal"
+                                            onClick={() => handleReplyClick(data)}
+                                        >
+                                            Reply
+                                        </button> : <button>Resolved</button>}
                                     </td>
                                 </tr>
                             ))}
@@ -331,7 +341,7 @@ const ComplaintForm = () => {
 
                                         <div class="form-group">
                                             <label class="form-label" for="description">Reply</label>
-                                            <textarea class="form-input" name='description' onChange={handleInputReplyChange} placeholder='Reply' rows={10} cols={10} value={replyData.description} />
+                                            <textarea class="form-input" name='description' onChange={handleInputReplyChange} placeholder='Reply' rows={10} cols={10} value={replyData.description} required />
                                             {/* Changed "Complaint" to "description" to match the state */}
                                         </div>
 
@@ -341,60 +351,24 @@ const ComplaintForm = () => {
                                             {/* Changed "Complaint" to "description" to match the state */}
                                         </div>
 
-                                        <div class="form-group">
-                                            <div className="dropdown">
-                                                <button
-                                                    className="btn btn-secondary dropdown-toggle"
-                                                    type="button"
-                                                    data-bs-toggle="dropdown"
-                                                    aria-expanded="false"
-                                                >
-                                                    {replyData ? "Status" : replyData.status}
-                                                </button>
-                                                <ul className="dropdown-menu">
-                                                    <li>
-                                                        <button
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Checked" })}
-                                                        >
-                                                            Ticket Checked
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket On-Progress" })}
-                                                        >
-                                                            Ticket On-Progress
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Denied" })}
-                                                        >
-                                                            Ticket Denied
-                                                        </button>
-                                                    </li>
-                                                    <li>
-                                                        <button
-                                                            className="dropdown-item"
-                                                            href="#"
-                                                            onClick={() => setreplydata({ ...replyData, status: "Ticket Resolved" })}
-                                                        >
-                                                            Ticket Resolved
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                                        <div className="form-group">
+                                            <label htmlFor="status">Select Status:</label>
+                                            <select
+                                                id="status"
+                                                className="form-select"
+                                                value={replyData.status || ''}
+                                                onChange={(e) => setreplydata({ ...replyData, status: e.target.value })}
+                                            >
+                                                <option value="Ticket Checked">Ticket Checked</option>
+                                                <option value="Ticket On-Progress">Ticket On-Progress</option>
+                                                <option value="Ticket Denied">Ticket Denied</option>
+                                                <option value="Ticket Resolved">Ticket Resolved</option>
+                                            </select>
                                         </div>
 
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Reply</button>
+                                            <button type="submit" class="btn btn-primary">{buttonText}</button>
                                         </div>
                                     </form>
 
@@ -439,10 +413,6 @@ const ComplaintForm = () => {
                             ) : (
                                 <p>No replies available.</p>
                             )}
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>

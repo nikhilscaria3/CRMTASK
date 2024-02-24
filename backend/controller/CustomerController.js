@@ -10,7 +10,8 @@ const createcustomer = async (req, res) => {
         companyName,
         industry,
         size,
-        location
+        location,
+        project
 
     } = req.body;
     try {
@@ -22,7 +23,8 @@ const createcustomer = async (req, res) => {
             companyName,
             industry,
             size,
-            location
+            location,
+            project
         });
 
 
@@ -34,24 +36,27 @@ const createcustomer = async (req, res) => {
     }
 };
 
-
 const getcustomer = async (req, res) => {
     try {
-      const page = parseInt(req.query.page) || 1; // get the page number from query params or set it to 1 if it's not provided
-      const limit = parseInt(req.query.limit) || 10; // get the number of records per page from query params or set it to 10 if it's not provided
-      const skipIndex = (page - 1) * limit; // calculate the index from which to start skipping records
-  
-      const savedCustomers = await Customer.find().limit(limit).skip(skipIndex);
-      res.json({
-        message: "Customers retrieved successfully",
-        customerData: savedCustomers,
-        totalPages: Math.ceil(await Customer.countDocuments() / limit), // calculate the total number of pages
-        currentPage: page,
-      });
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skipIndex = (page - 1) * limit;
+
+        const savedCustomers = await Customer.find()
+            .sort({ createdAt: -1 }) // Sort in descending order based on the createdAt field
+            .limit(limit)
+            .skip(skipIndex);
+
+        res.json({
+            message: "Customers retrieved successfully",
+            customerData: savedCustomers,
+            totalPages: Math.ceil(await Customer.countDocuments() / limit),
+            currentPage: page,
+        });
     } catch (error) {
-      res.status(500).json({ message: "Error fetching customers", error: error.message });
+        res.status(500).json({ message: "Error fetching customers", error: error.message });
     }
-  }
+};
 
 const updateCustomer = async (req, res) => {
     try {
@@ -67,17 +72,18 @@ const updateCustomer = async (req, res) => {
 
 const deleteCustomer = async (req, res) => {
     try {
-        const { email } = req.body;
-        const data = await Customer.findOne({ email }); // Fix here
+        const { emailAddress } = req.params;
+        const data = await Customer.findOne({ emailAddress }); // Fix here
         console.log(data);
-        const customer = await Customer.findOneAndDelete({ email }); // Fix here
+        const customer = await Customer.findOneAndDelete({ emailAddress }); // Fix here
 
         if (!customer) {
             console.log("not");
-            return res.status(404).json({ message: 'Customer not found' });
+            return res.status(404).json({ message: 'customer not found' });
         }
-        res.json({ message: 'Customer deleted successfully' });
+        res.json({ message: 'customer deleted successfully' });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 };

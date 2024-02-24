@@ -244,7 +244,7 @@ const Employees = () => {
                             <th>Salary</th>
                             <th>Location</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th colSpan={2}>Action</th>
                         </tr>
                     </thead>
                     <tbody>

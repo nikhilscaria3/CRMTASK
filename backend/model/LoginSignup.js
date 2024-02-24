@@ -48,12 +48,23 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
     location:
     {
         type: String,
         required: true
+    },
+    project: {
+        type: String,
+        required: true
+    },
+    projectcost: {
+        type: Number,
+        required: true
     }
-
 });
 
 
@@ -99,10 +110,14 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    status:{
-        type:String,
-        required:true,
-        default:"Active"
+    createdAt: {
+        type: Date,
+        default: Date.now,
+    },
+    status: {
+        type: String,
+        required: true,
+        default: "Active"
     }
 
 });

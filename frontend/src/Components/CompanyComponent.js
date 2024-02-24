@@ -1,87 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent"
 import { axiosInstance, setAuthToken } from "../util/baseurl"
-import '../Styles/Customers.css'
+import '../Styles/Company.css'
 
-const Customers = () => {
-    const [customersList, setCustomersList] = useState([])
-    const [selectedCustomer, setSelectedCustomer] = useState(null)
+const Company = () => {
+    const [CompanyList, setCompanyList] = useState([])
+    const [selectedcompany, setSelectedcompany] = useState(null)
     const [operation, setoperation] = useState(null)
-    const [newCustomer, setNewCustomer] = useState({
-        fullName: '',
-        address: '',
-        phoneNumber: '',
-        emailAddress: '',
+    const [message, setmessage] = useState(null)
+    const [newcompany, setNewcompany] = useState({
         companyName: '',
         industry: '',
         size: '',
         location: "",
-        project: '',
-        projectcost: ""
+        revenue: ''
     })
     const modalRef = useRef(null)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setNewCustomer(prevCustomer => ({ ...prevCustomer, [name]: value }))
+        setNewcompany(prevcompany => ({ ...prevcompany, [name]: value }))
     }
 
     const handleSubmit = async () => {
         try {
-            if (selectedCustomer) {
-                // Update customer
-                const response = await axiosInstance.put(`/api/customers/${selectedCustomer._id}`, {
-                    ...newCustomer
+            if (selectedcompany) {
+                // Update company
+                const response = await axiosInstance.put(`/api/Company/${selectedcompany._id}`, {
+                    ...newcompany
                 });
 
                 if (response.ok) {
-                    const updatedCustomer = await response.json();
-                    const updatedCustomersList = customersList.map(customer => {
-                        if (customer._id === updatedCustomer._id) {
-                            return updatedCustomer;
+                    const updatedcompany = await response.json();
+                    const updatedCompanyList = CompanyList.map(company => {
+                        if (company._id === updatedcompany._id) {
+                            return updatedcompany;
                         } else {
-                            return customer;
+                            return company;
                         }
                     });
-                    setCustomersList(updatedCustomersList);
-                    setSelectedCustomer(null);
+                    setmessage(response.data.message)
+                    setCompanyList(updatedCompanyList);
+                    setSelectedcompany(null);
                     if (modalRef.current) {
                         modalRef.current.handleClose();
                     }
                 }
             } else {
-                // Create customer
-                const { fullName,
-                    address,
-                    phoneNumber,
-                    emailAddress,
+                // Create company
+                const {
                     companyName,
                     industry,
                     size,
-                    project,
-                    projectcost,
-                    location } = newCustomer
+                    location,
+                    revenue } = newcompany
 
-                const response = await axiosInstance.post('/api/customers', {
-                    fullName,
-                    address,
-                    phoneNumber,
-                    emailAddress,
+                const response = await axiosInstance.post('/api/Company', {
+
                     companyName,
                     industry,
                     size,
-                    project,
-                    projectcost,
-                    location
+                    location,
+                    revenue
                 });
 
                 if (response) {
-                    const createdCustomer = await response.json();
-                    setCustomersList([...customersList, createdCustomer]);
+                    const createdcompany = await response.json();
+                    setCompanyList([...CompanyList, createdcompany]);
                 }
+                setmessage(response.data.message)
             }
         } catch (error) {
-            console.error('Error creating/updating customer:', error);
+            console.error('Error creating/updating company:', error);
         }
     }
 
@@ -89,19 +79,19 @@ const Customers = () => {
     const [limit, setLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
 
-    const fetchCustomers = async () => {
+    const fetchCompany = async () => {
         try {
-            const response = await axiosInstance.get(`/api/customers?page=${page}&limit=${limit}`);
+            const response = await axiosInstance.get(`/api/companies?page=${page}&limit=${limit}`);
             const data = response.data;
 
-            // Reverse the customerData array
-            const reversedCustomerData = data.customerData;
+            // Reverse the companyData array
+            const reversedcompanyData = data.companyData;
 
-            // Set the reversed customerData in the state
-            setCustomersList(reversedCustomerData);
+            // Set the reversed companyData in the state
+            setCompanyList(reversedcompanyData);
             setTotalPages(data.totalPages);
         } catch (error) {
-            console.error('Error fetching customers:', error);
+            console.error('Error fetching Company:', error);
         }
     };
 
@@ -119,44 +109,41 @@ const Customers = () => {
     };
 
     useEffect(() => {
-        fetchCustomers();
+        fetchCompany();
     }, [page, limit]);
 
 
 
-    const handleDelete = async (customer) => {
+    const handleDelete = async (company) => {
         try {
-            const response = await axiosInstance.delete(`/api/deletecustomer/${customer.emailAddress}`);
+            const response = await axiosInstance.delete(`/api/deletecompany/${company.emailAddress}`);
 
             if (response) {
-                const updatedCustomersList = customersList.filter(cust => cust._id !== customer._id);
-                setCustomersList(updatedCustomersList);
-                setSelectedCustomer(null);
-                setSelectedCustomer(null);
+                const updatedCompanyList = CompanyList.filter(cust => cust._id !== company._id);
+                setCompanyList(updatedCompanyList);
+                setSelectedcompany(null);
+                setSelectedcompany(null);
                 if (modalRef.current) {
                     modalRef.current.handleClose();
                 }
+                setmessage(response.data.message)
             } else {
-                console.error('Error deleting customer:', response.data.message);
+                console.error('Error deleting company:', response.data.message);
             }
         } catch (error) {
-            console.error('Error deleting customer:', error);
+            console.error('Error deleting company:', error);
         }
     };
 
 
     const handleAddUserClick = () => {
-        setNewCustomer({
-            fullName: '',
-            address: '',
-            phoneNumber: '',
-            emailAddress: '',
+        setNewcompany({
+
             companyName: '',
             industry: '',
             size: '',
-            project: '',
-            projectcost: "",
-            location: ""
+            location: "",
+            revenue: ''
         })
         setoperation("Add User")
     }
@@ -168,7 +155,7 @@ const Customers = () => {
             <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleAddUserClick}>
                 ADD USER
             </button>
-
+            {message ? <p>{message}</p> : null}
 
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" ref={modalRef}>
                 <div class="modal-dialog">
@@ -181,43 +168,35 @@ const Customers = () => {
                             <form onSubmit={handleSubmit}>
                                 <div class="form-group">
                                     <label class="form-label" for="fullName">Name</label>
-                                    <input type='text' class="form-input" name='fullName' onChange={handleInputChange} placeholder='Name' value={newCustomer.fullName} />
+                                    <input type='text' class="form-input" name='fullName' onChange={handleInputChange} placeholder='Name' value={newcompany.fullName} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="address">Address</label>
-                                    <input type='text' class="form-input" name='address' onChange={handleInputChange} placeholder='Address' value={newCustomer.address} />
+                                    <input type='text' class="form-input" name='address' onChange={handleInputChange} placeholder='Address' value={newcompany.address} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="phoneNumber">Phone Number</label>
-                                    <input type='text' class="form-input" name='phoneNumber' onChange={handleInputChange} placeholder='Phone Number' value={newCustomer.phoneNumber} />
+                                    <input type='text' class="form-input" name='phoneNumber' onChange={handleInputChange} placeholder='Phone Number' value={newcompany.phoneNumber} />
                                     <label class="form-label" for="emailAddress">Email Address</label>
-                                    <input type='text' class="form-input" name='emailAddress' onChange={handleInputChange} placeholder='Email Address' value={newCustomer.emailAddress} />
+                                    <input type='text' class="form-input" name='emailAddress' onChange={handleInputChange} placeholder='Email Address' value={newcompany.emailAddress} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="companyName">Company Name</label>
-                                    <input type='text' class="form-input" name='companyName' onChange={handleInputChange} placeholder='Company Name' value={newCustomer.companyName} />
+                                    <input type='text' class="form-input" name='companyName' onChange={handleInputChange} placeholder='Company Name' value={newcompany.companyName} />
                                     <label class="form-label" for="size">Size</label>
-                                    <input type='text' class="form-input" name='size' onChange={handleInputChange} placeholder='Size' value={newCustomer.size} />
+                                    <input type='text' class="form-input" name='size' onChange={handleInputChange} placeholder='Size' value={newcompany.size} />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="industry">Industry</label>
-                                    <input type='text' class="form-input" name='industry' onChange={handleInputChange} placeholder='Industry' value={newCustomer.industry} />
+                                    <input type='text' class="form-input" name='industry' onChange={handleInputChange} placeholder='Industry' value={newcompany.industry} />
                                 </div>
 
                                 <div class="form-group">
                                     <label class="form-label" for="size">Location</label>
-                                    <input type='text' class="form-input" name='location' onChange={handleInputChange} placeholder='Location' value={newCustomer.location} />
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="form-label" for="project">Project</label>
-                                    <input type='text' class="form-input" name='project' onChange={handleInputChange} placeholder='Project' value={newCustomer.project} />
-
-                                    <label class="form-label" for="projectcost">Project Cost</label>
-                                    <input type='text' class="form-input" name='projectcost' onChange={handleInputChange} placeholder='Project Cost' value={newCustomer.projectcost} />
+                                    <input type='text' class="form-input" name='location' onChange={handleInputChange} placeholder='Location' value={newcompany.location} />
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -235,25 +214,25 @@ const Customers = () => {
                     <thead>
                         <tr>
                             <th>Sl No.</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Email Address</th>
                             <th>Company Name</th>
-                            <th>Project</th>
+                            <th>Industry</th>
+                            <th>Size</th>
+                            <th>Location</th>
+                            <th>Assigned Project</th>
+                            <th>Revenue</th>
                             <th colSpan={2}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {customersList.map((customer, index) => (
-                            <tr key={customer._id}>
+                        {CompanyList.map((company, index) => (
+                            <tr key={company._id}>
                                 <td>{(page - 1) * limit + index + 1}</td>
-                                <td>{customer.fullName}</td>
-                                <td>{customer.address}</td>
-                                <td>{customer.phoneNumber}</td>
-                                <td>{customer.emailAddress}</td>
-                                <td>{customer.companyName}</td>
-                                <td>{customer.project}</td>
+                                <td>{company.companyName}</td>
+                                <td>{company.industry}</td>
+                                <td>{company.size}</td>
+                                <td>{company.location}</td>
+                                <td>{company.project}</td>
+                                <td>{company.projectcost}</td>
                                 <td>
                                     <button
                                         type="button"
@@ -261,18 +240,16 @@ const Customers = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
                                         onClick={() => {
-                                            setSelectedCustomer(customer);
-                                            setNewCustomer({
-                                                fullName: customer.fullName,
-                                                address: customer.address,
-                                                phoneNumber: customer.phoneNumber,
-                                                emailAddress: customer.emailAddress,
-                                                companyName: customer.companyName,
-                                                industry: customer.industry,
-                                                size: customer.size,
-                                                location: customer.location,
-                                                project: customer.project,
-                                                projectcost: customer.projectcost,
+                                            setSelectedcompany(company);
+                                            setNewcompany({
+                                                fullName: company.fullName,
+                                                address: company.address,
+                                                phoneNumber: company.phoneNumber,
+                                                emailAddress: company.emailAddress,
+                                                companyName: company.companyName,
+                                                industry: company.industry,
+                                                size: company.size,
+                                                location: company.location,
                                             });
                                             setoperation("Update User");
                                         }}
@@ -300,7 +277,7 @@ const Customers = () => {
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(customer)}>Delete</button>
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(company)}>Delete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -320,4 +297,4 @@ const Customers = () => {
     )
 }
 
-export default Customers
+export default Company

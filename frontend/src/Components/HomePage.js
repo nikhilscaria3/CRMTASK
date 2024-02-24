@@ -11,7 +11,7 @@ const Homepage = () => {
         countofcomplaint: 0,
     });
 
-    const [revenue, setRevenue] = useState(10000);
+    const [revenue, setRevenue] = useState(0);
 
     const [revenueData, setRevenueData] = useState({
         options: {
@@ -25,7 +25,7 @@ const Homepage = () => {
         series: [
             {
                 name: "Revenue",
-                data: [5000, revenue],
+                data: [60000],
             },
         ],
         fill: {
@@ -34,17 +34,16 @@ const Homepage = () => {
             opacity: 0.8,
         },
         markers: {
-            size: [8, 8, 12, 8, 8], // Larger size for the revenue point
+            size: [8, 8, 12, 8, 8],
         },
         tooltip: {
             y: {
                 formatter: function (val) {
-                    return "$ " + val;
+                    return "$ " + val.toLocaleString();
                 },
             },
         },
     });
-
 
     const fetchCount = async () => {
         try {
@@ -55,6 +54,24 @@ const Homepage = () => {
                 countofcustomer: data.countofcustomer[0].countdata,
                 countofcomplaint: data.countofcomplaint[0].countdata,
             });
+
+            setRevenue(data.totalRevenue); // Assuming totalRevenue is the key for revenue
+            setRevenueData(prevData => ({
+                ...prevData,
+                series: [
+                    {
+                        ...prevData.series[0],
+                        data: [50000,data.totalRevenue],
+                    },
+                ],
+                options: {
+                    ...prevData.options,
+                    xaxis: {
+                        ...prevData.options.xaxis,
+                        categories: ["2023", "2024"],
+                    },
+                },
+            }));
         } catch (err) {
             console.error(err);
         }

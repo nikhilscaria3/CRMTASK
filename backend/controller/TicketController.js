@@ -12,7 +12,7 @@ const getComplaints = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10; // get the number of records per page from query params or set it to 10 if it's not provided
         const skipIndex = (page - 1) * limit; // calculate the index from which to start skipping records
 
-        const complaints = await Complaint.find().limit(limit).skip(skipIndex);
+        const complaints = await Complaint.find().sort({ createdAt: -1 }).limit(limit).skip(skipIndex);
 
         res.status(200).json({
             complaintsdata: complaints,
@@ -86,11 +86,13 @@ const replyComplaint = async (req, res) => {
             }
         });
 
+        const emailAddress = email.split('@')[0];
+
         const TicketTemplatepath = path.join(__dirname, 'ticket.html');
         let TicketTemplate = fs.readFileSync(TicketTemplatepath, 'utf-8');
 
         TicketTemplate = TicketTemplate.replace('{{description}}', description)
-            .replace('{{email}}', email);
+            .replace('{{email}}', emailAddress);
 
         const mailOptions = {
             from: process.env.SMTP_USER,
@@ -110,16 +112,21 @@ const replyComplaint = async (req, res) => {
 
 const repliesData = async (req, res) => {
     try {
-        const { email } = req.query; // Change to req.query to retrieve email from the query parameters
+        const { email } = req.query;
         console.log(email);
-        const replies = await Complaint.findOne({ email });
-        console.log(replies.replies);
-        res.json({ replydata: replies.replies });
+
+        const complaint = await Complaint.findOne({ email });
+        const sortedReplies = complaint.replies.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        console.log(sortedReplies);
+
+        res.json({ replydata: sortedReplies });
     } catch (error) {
         console.error('Error fetching replies:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 module.exports = {

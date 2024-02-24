@@ -52,19 +52,21 @@
 }
 
 .modal-content {
-    max-width: 1200px; /* Adjust the max-width as needed */
+    max-width: 1200px;
+    /* Adjust the max-width as needed */
     width: 1000x;
     margin: auto;
     /* Set the width as per your requirement */
 }
 
-  .modal-dialog {
-    max-width: 1200px; /* Adjust the max-width as needed */
+.modal-dialog {
+    max-width: 1200px;
+    /* Adjust the max-width as needed */
     width: 100%;
     padding: 15px;
     margin: 0 auto;
-  }
-  
+}
+
 .twomodalcontainer {
     display: flex;
     margin: auto;
@@ -85,5 +87,7 @@
 .dropdown {
     margin: auto;
 }
+
+
 
 /* just padding or any other styles as needed */
