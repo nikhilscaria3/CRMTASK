@@ -77,7 +77,7 @@ function Signup() {
               />
               <label className='confirmpasswordlabel'>Confirm Password</label>
               <input
-                type='password'
+                type='text'
                 placeholder='Confirm Password'
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
