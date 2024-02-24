@@ -122,7 +122,11 @@ const employeeSchema = new mongoose.Schema({
 
 });
 
-
+const DialerSchema = new mongoose.Schema({
+    email: { type: String },
+    subject: { type: String },
+    message: { type: String }
+})
 
 const ComplaintSchema = new mongoose.Schema({
     // Your existing fields for the Complaint model
@@ -177,8 +181,8 @@ const ComplaintSchema = new mongoose.Schema({
 
 const Employee = mongoose.model('Employee', employeeSchema);
 const Complaint = mongoose.model('Complaint', ComplaintSchema);
-
+const Dialer = mongoose.model("Dialer", DialerSchema)
 const Customer = mongoose.model('Customer', customerSchema);
 const User = mongoose.model("User", UserSchema)
 
-module.exports = { User, Customer, Complaint, Employee };
+module.exports = { User, Customer, Complaint, Employee, Dialer };

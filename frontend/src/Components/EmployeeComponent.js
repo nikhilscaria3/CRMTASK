@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent"
 import { axiosInstance, setAuthToken } from "../util/baseurl"
 import '../Styles/Customers.css'
+import { useNavigate } from 'react-router-dom'
 
 const Employees = () => {
     const [employeesList, setemployeesList] = useState([])
@@ -25,6 +26,7 @@ const Employees = () => {
         const { name, value } = e.target;
         setNewemployee(prevemployee => ({ ...prevemployee, [name]: value }))
     }
+    const navigate = useNavigate()
 
     const handleSubmit = async () => {
         try {
@@ -121,10 +123,10 @@ const Employees = () => {
 
     const handleDelete = async (employee) => {
         try {
-         
+
             const response = await axiosInstance.delete(`/api/deleteemployee/${employee.emailAddress}`);
             // Use the correct endpoint for deletion and pass the email address as a parameter
-    
+
             if (response) {
                 const updatedemployeesList = employeesList.filter(cust => cust._id !== employee._id);
                 setemployeesList(updatedemployeesList);
@@ -139,7 +141,7 @@ const Employees = () => {
             console.error('Error deleting employee:', error);
         }
     };
-    
+
 
     const handleAddUserClick = () => {
         setNewemployee({
@@ -155,6 +157,10 @@ const Employees = () => {
             status: ''
         })
         setoperation("Add User")
+    }
+
+    const handlcontactclick = (email, phoneNumber) => {
+        navigate('/dialer', { state: { employeeemail: email, employeephoneNumber: phoneNumber } });
     }
 
     return (
@@ -244,7 +250,7 @@ const Employees = () => {
                             <th>Salary</th>
                             <th>Location</th>
                             <th>Status</th>
-                            <th colSpan={2}>Action</th>
+                            <th colSpan={3}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -306,13 +312,14 @@ const Employees = () => {
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                  
-                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(employee)}>Delete</button>
+
+                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(employee)}>Delete</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
+                                <td><button type="button" class="btn btn-warning"  onClick={() => handlcontactclick(employee.emailAddress, employee.phoneNumber)}>Contact</button></td>
                             </tr>
                         ))}
                     </tbody>

@@ -4,7 +4,7 @@ import './navbarcomponent.css'
 import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
-    
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
@@ -72,6 +72,16 @@ const Navbar = () => {
                                     className="nav-link"
                                 >
                                     Tickets
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
+                                <NavLink
+                                    exact
+                                    to="/dialer"
+                                    activeClassName="active-ticket"
+                                    className="nav-link"
+                                >
+                                    Dialer
                                 </NavLink>
                             </li>
                         </ul>

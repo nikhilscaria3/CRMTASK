@@ -9,6 +9,7 @@ import Customers from "./Components/CustomerComponent";
 import ComplaintForm from "./Components/TicketComponent";
 import Employees from "./Components/EmployeeComponent";
 import Company from "./Components/CompanyComponent";
+import Dialer from "./Components/DialerComponent";
 
 const PrivateRoute = ({ element, ...rest }) => {
   return isAuthenticated() ? (
@@ -35,8 +36,10 @@ const App = () => {
         />
         <Route
           path="/employee" element={<Employees />} />
-            <Route
+        <Route
           path="/companies" element={<Company />} />
+        <Route
+          path="/dialer" element={<Dialer />} />
         <Route
           path="/clients" element={<Customers />} />
 

@@ -1,0 +1,150 @@
+/* component.module.css */
+
+.dialer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 70rem;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    background-color: #f5f5f5;
+  }
+  
+  .dialer-container h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .dialermaincontainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .onesidedialer,
+  .secondsidemailer {
+    flex: 0 0 30%; /* Set a fixed width of 40% for onesidedialer */
+    margin-right: 20px;
+  }
+  
+  .secondsidemailer {
+    flex: 0 0 70%; /* Set a fixed width of 60% for secondsidemailer */
+    margin-right: 0;
+  }
+  
+  
+  .onesidedialer input,
+  .secondsidemailer input,
+  .secondsidemailer textarea {
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    resize: none;
+  }
+  
+  .onesidedialer input {
+    text-align: center;
+  }
+  
+  .number-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .dialerbuttons {
+    width: 100%;
+    padding: 15px;
+    font-size: 24px;
+    border: none;
+    border-radius: 10px;
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .dialerbuttons:hover {
+    background-color: #2077b3;
+  }
+  
+  .additional-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .whatsapp-button {
+    background-color: #25d366;
+    width: 100%;
+    padding: 15px;
+    font-size: 24px;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+
+
+  
+  .secondsidemailer label {
+    display: block;
+    margin-bottom:1px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+  }
+  
+  .dialertitle{
+    font-size: 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .secondsidemailer button {
+    width: 100%;
+    padding: 15px;
+    font-size: 24px;
+    border: none;
+    border-radius: 10px;
+    background-color: #2fdd6f;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .secondsidemailer button:hover {
+    background-color: #25d366;
+  }
+  
+  .secondsidemailer button:active {
+    background-color:#25d366
+  }
+
+  @media screen and (max-width: 768px) {
+    .dialermaincontainer {
+      flex-direction: column;
+    }
+  
+    .onesidedialer,
+    .secondsidemailer {
+      margin-right: 0;
+    }
+  }
+  

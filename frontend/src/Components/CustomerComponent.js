@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent"
 import { axiosInstance, setAuthToken } from "../util/baseurl"
 import '../Styles/Customers.css'
+import { useNavigate } from 'react-router-dom'
 
 const Customers = () => {
     const [customersList, setCustomersList] = useState([])
@@ -161,7 +162,10 @@ const Customers = () => {
         setoperation("Add User")
     }
 
-
+    const navigate = useNavigate()
+    const handlcontactclick = (email, phoneNumber) => {
+        navigate('/dialer', { state: { employeeemail: email, employeephoneNumber: phoneNumber } });
+    }
     return (
         <div>
             <Navbar /><br />
@@ -241,7 +245,7 @@ const Customers = () => {
                             <th>Email Address</th>
                             <th>Company Name</th>
                             <th>Project</th>
-                            <th colSpan={2}>Action</th>
+                            <th colSpan={3}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -306,7 +310,9 @@ const Customers = () => {
                                         </div>
                                     </div>
                                 </td>
+                                <td><button type="button" class="btn btn-warning" onClick={() => handlcontactclick(customer.emailAddress, customer.phoneNumber)}>Contact</button></td>
                             </tr>
+
                         ))}
                     </tbody>
                 </table>
