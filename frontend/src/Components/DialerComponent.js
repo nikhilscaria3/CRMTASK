@@ -9,13 +9,22 @@ const Dialer = () => {
     const [buttonText, setButtonText] = useState('Send');
     const location = useLocation();
     const { employeeemail, employeephoneNumber } = location.state || {};
-
+    const [message, setMessage] = useState(null);
     const [emailData, setEmail] = useState({
         email: employeeemail,
         subject: "",
         message: ""
     });
-    const [phoneNumber, setPhoneNumber] = useState(employeephoneNumber);
+
+    const [phoneNumber, setPhoneNumber] = useState(employeephoneNumber || '');
+
+    useEffect((req, res) => {
+        if (message) {
+            setTimeout(() => {
+                setMessage(null)
+            }, 3000);
+        }
+    })
 
 
     const handleChange = (e, field) => {
@@ -39,14 +48,24 @@ const Dialer = () => {
     };
 
     const handleDialClick = () => {
-        const telLink = `tel:${phoneNumber}`;
-        window.location.href = telLink;
+        if (phoneNumber.length === 10) {
+            const telLink = `tel:${phoneNumber}`;
+            window.location.href = telLink;
+        } else {
+            setMessage("Number must have 10 digits for Call")
+        }
     };
 
     const handleWhatsAppClick = () => {
-        const whatsappLink = `https://wa.me/${phoneNumber}`;
-        window.location.href = whatsappLink;
+        if (phoneNumber.length === 10) {
+            const whatsappLink = `https://wa.me/${phoneNumber}`;
+            window.location.href = whatsappLink;
+        } else {
+       
+            setMessage("Number must have 10 digits for WhatsApp.")
+        }
     };
+
 
     const handleEmailSend = async () => {
         const { email, subject, message } = emailData;
@@ -115,6 +134,7 @@ const Dialer = () => {
         };
     }, [phoneNumber]);
 
+
     return (
         <div>
             <Navbar />
@@ -144,12 +164,17 @@ const Dialer = () => {
                             <button className='dialerbuttons' onClick={handleBackspaceClick}><i className='bx bx-arrow-back '></i></button>
                             <button className='dialerbuttons' onClick={handleClearClick}><i className='bx bx-x'></i></button>
                         </div>
+
+
                         <div className="action-buttons">
-                            <button className='dialerbuttons' onClick={handleDialClick}><i className='bx bx-phone' ></i></button>
-                            <button className="whatsapp-button" onClick={handleWhatsAppClick}>
+
+                            <button className='dialerbuttons' onClick={handleDialClick}  ><i className='bx bx-phone' ></i></button>
+                            <button className="whatsapp-button" onClick={handleWhatsAppClick} >
                                 <i className='bx bxl-whatsapp'></i>
                             </button>
+
                         </div>
+                        <p>{message}</p>
                     </div>
 
                     <div className="secondsidemailer">
