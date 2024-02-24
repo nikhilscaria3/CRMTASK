@@ -11,7 +11,8 @@ const createcustomer = async (req, res) => {
         industry,
         size,
         location,
-        project
+        project,
+        projectcost
 
     } = req.body;
     try {
@@ -24,7 +25,8 @@ const createcustomer = async (req, res) => {
             industry,
             size,
             location,
-            project
+            project,
+            projectcost
         });
 
 
