@@ -52,3 +52,12 @@
         flex-direction: column;
     }
 }
+
+.loading{
+    font-size: large;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    align-items: center;
+    margin: auto;
+    display: flex;
+}
