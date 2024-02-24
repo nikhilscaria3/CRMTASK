@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 const Customers = () => {
     const [customersList, setCustomersList] = useState([])
     const [selectedCustomer, setSelectedCustomer] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
     const [operation, setoperation] = useState(null)
     const [newCustomer, setNewCustomer] = useState({
         fullName: '',
@@ -103,6 +104,8 @@ const Customers = () => {
             setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Error fetching customers:', error);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -234,94 +237,100 @@ const Customers = () => {
                 </div>
             </div>
 
-            <div>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Sl No.</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Email Address</th>
-                            <th>Company Name</th>
-                            <th>Project</th>
-                            <th colSpan={3}>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {customersList.map((customer, index) => (
-                            <tr key={customer._id}>
-                                <td>{(page - 1) * limit + index + 1}</td>
-                                <td>{customer.fullName}</td>
-                                <td>{customer.address}</td>
-                                <td>{customer.phoneNumber}</td>
-                                <td>{customer.emailAddress}</td>
-                                <td>{customer.companyName}</td>
-                                <td>{customer.project}</td>
-                                <td>
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        onClick={() => {
-                                            setSelectedCustomer(customer);
-                                            setNewCustomer({
-                                                fullName: customer.fullName,
-                                                address: customer.address,
-                                                phoneNumber: customer.phoneNumber,
-                                                emailAddress: customer.emailAddress,
-                                                companyName: customer.companyName,
-                                                industry: customer.industry,
-                                                size: customer.size,
-                                                location: customer.location,
-                                                project: customer.project,
-                                                projectcost: customer.projectcost,
-                                            });
-                                            setoperation("Update User");
-                                        }}
-                                    >
-                                        Update
-                                    </button>
-                                </td>
+            {isLoading ? (
+                <p className="loading">Loading...</p>
+            ) : (
+                <div>
 
-                                <td>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Sl No.</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>Email Address</th>
+                                <th>Company Name</th>
+                                <th>Project</th>
+                                <th colSpan={3}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {customersList.map((customer, index) => (
+                                <tr key={customer._id}>
+                                    <td>{(page - 1) * limit + index + 1}</td>
+                                    <td>{customer.fullName}</td>
+                                    <td>{customer.address}</td>
+                                    <td>{customer.phoneNumber}</td>
+                                    <td>{customer.emailAddress}</td>
+                                    <td>{customer.companyName}</td>
+                                    <td>{customer.project}</td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                            onClick={() => {
+                                                setSelectedCustomer(customer);
+                                                setNewCustomer({
+                                                    fullName: customer.fullName,
+                                                    address: customer.address,
+                                                    phoneNumber: customer.phoneNumber,
+                                                    emailAddress: customer.emailAddress,
+                                                    companyName: customer.companyName,
+                                                    industry: customer.industry,
+                                                    size: customer.size,
+                                                    location: customer.location,
+                                                    project: customer.project,
+                                                    projectcost: customer.projectcost,
+                                                });
+                                                setoperation("Update User");
+                                            }}
+                                        >
+                                            Update
+                                        </button>
+                                    </td>
 
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" >
-                                        Delete
-                                    </button>
+                                    <td>
+
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" >
+                                            Delete
+                                        </button>
 
 
-                                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Data</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure to delete the data ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(customer)}>Delete</button>
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Data</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure to delete the data ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(customer)}>Delete</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td><button type="button" class="btn btn-warning" onClick={() => handlcontactclick(customer.emailAddress, customer.phoneNumber)}>Contact</button></td>
-                            </tr>
+                                    </td>
+                                    <td><button type="button" class="btn btn-warning" onClick={() => handlcontactclick(customer.emailAddress, customer.phoneNumber)}>Contact</button></td>
+                                </tr>
 
-                        ))}
-                    </tbody>
-                </table>
-                <div className='paginationbuttoncontainer'>
-                    <button onClick={handlePrevClick} disabled={page === 1}>Prev</button>
-                    <span>{`Page ${page} of ${totalPages}`}</span>
-                    <button onClick={handleNextClick} disabled={page === totalPages}>Next</button>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className='paginationbuttoncontainer'>
+                        <button onClick={handlePrevClick} disabled={page === 1}>Prev</button>
+                        <span>{`Page ${page} of ${totalPages}`}</span>
+                        <button onClick={handleNextClick} disabled={page === totalPages}>Next</button>
+                    </div>
                 </div>
-            </div>
+
+            )}
         </div>
     )
 }
