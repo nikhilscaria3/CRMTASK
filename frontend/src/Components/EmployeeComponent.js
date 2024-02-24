@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 const Employees = () => {
     const [employeesList, setemployeesList] = useState([])
     const [selectedemployee, setSelectedemployee] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
     const [operation, setoperation] = useState(null)
     const [newemployee, setNewemployee] = useState({
         employeename: '',
@@ -100,6 +101,8 @@ const Employees = () => {
             setTotalPages(data.totalPages);
         } catch (error) {
             console.error('Error fetching employees:', error);
+        } finally {
+            setIsLoading(false)
         }
     };
 
@@ -234,102 +237,105 @@ const Employees = () => {
                     </div>
                 </div>
             </div>
+            {isLoading ? (
+                <p className="loading">Loading...</p>
+            ) : (
+                <div>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                <th>Sl No.</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Phone Number</th>
+                                <th>Email Address</th>
+                                <th>Company Name</th>
+                                <th>Domain</th>
+                                <th>WorkMode</th>
+                                <th>Salary</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th colSpan={3}>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {employeesList.map((employee, index) => (
+                                <tr key={employee._id}>
+                                    <td>{(page - 1) * limit + index + 1}</td>
+                                    <td>{employee.employeename}</td>
+                                    <td>{employee.address}</td>
+                                    <td>{employee.phoneNumber}</td>
+                                    <td>{employee.emailAddress}</td>
+                                    <td>{employee.companyName}</td>
+                                    <td>{employee.domain}</td>
+                                    <td>{employee.workmode}</td>
+                                    <td>{employee.salary}</td>
+                                    <td>{employee.location}</td>
+                                    <td>{employee.status}</td>
+                                    <td>
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#exampleModal"
+                                            onClick={() => {
+                                                setSelectedemployee(employee);
+                                                setNewemployee({
+                                                    fullName: employee.employeename,
+                                                    address: employee.address,
+                                                    phoneNumber: employee.phoneNumber,
+                                                    emailAddress: employee.emailAddress,
+                                                    companyName: employee.companyName,
+                                                    domain: employee.domain,
+                                                    workmode: employee.workmode,
+                                                    salary: employee.salary,
+                                                    location: employee.location,
+                                                    status: employee.status
+                                                });
+                                                setoperation("Update User");
+                                            }}
+                                        >
+                                            Update
+                                        </button>
+                                    </td>
 
-            <div>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Sl No.</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Phone Number</th>
-                            <th>Email Address</th>
-                            <th>Company Name</th>
-                            <th>Domain</th>
-                            <th>WorkMode</th>
-                            <th>Salary</th>
-                            <th>Location</th>
-                            <th>Status</th>
-                            <th colSpan={3}>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {employeesList.map((employee, index) => (
-                            <tr key={employee._id}>
-                                <td>{(page - 1) * limit + index + 1}</td>
-                                <td>{employee.employeename}</td>
-                                <td>{employee.address}</td>
-                                <td>{employee.phoneNumber}</td>
-                                <td>{employee.emailAddress}</td>
-                                <td>{employee.companyName}</td>
-                                <td>{employee.domain}</td>
-                                <td>{employee.workmode}</td>
-                                <td>{employee.salary}</td>
-                                <td>{employee.location}</td>
-                                <td>{employee.status}</td>
-                                <td>
-                                    <button
-                                        type="button"
-                                        class="btn btn-primary"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal"
-                                        onClick={() => {
-                                            setSelectedemployee(employee);
-                                            setNewemployee({
-                                                fullName: employee.employeename,
-                                                address: employee.address,
-                                                phoneNumber: employee.phoneNumber,
-                                                emailAddress: employee.emailAddress,
-                                                companyName: employee.companyName,
-                                                domain: employee.domain,
-                                                workmode: employee.workmode,
-                                                salary: employee.salary,
-                                                location: employee.location,
-                                                status: employee.status
-                                            });
-                                            setoperation("Update User");
-                                        }}
-                                    >
-                                        Update
-                                    </button>
-                                </td>
+                                    <td>
 
-                                <td>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" >
+                                            Delete
+                                        </button>
 
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" >
-                                        Delete
-                                    </button>
+                                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Data</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Are you sure to delete the data ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 
-                                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Data</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Are you sure to delete the data ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
-                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(employee)}>Delete</button>
+                                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick={() => handleDelete(employee)}>Delete</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td><button type="button" class="btn btn-warning"  onClick={() => handlcontactclick(employee.emailAddress, employee.phoneNumber)}>Contact</button></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <div className='paginationbuttoncontainer'>
-                    <button onClick={handlePrevClick} disabled={page === 1}>Prev</button>
-                    <span>{`Page ${page} of ${totalPages}`}</span>
-                    <button onClick={handleNextClick} disabled={page === totalPages}>Next</button>
+                                    </td>
+                                    <td><button type="button" class="btn btn-warning" onClick={() => handlcontactclick(employee.emailAddress, employee.phoneNumber)}>Contact</button></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className='paginationbuttoncontainer'>
+                        <button onClick={handlePrevClick} disabled={page === 1}>Prev</button>
+                        <span>{`Page ${page} of ${totalPages}`}</span>
+                        <button onClick={handleNextClick} disabled={page === totalPages}>Next</button>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 }
