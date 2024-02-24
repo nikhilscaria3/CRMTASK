@@ -5,7 +5,7 @@ const { createAccount, getAccount } = require('../controller/AccountInfoControll
 const verifyToken = require("../Auth/UserAuth");
 const { getcustomer, createcustomer, updateCustomer, deleteCustomer } = require('../controller/CustomerController');
 const { getemployee, createemployee, updateemployee, deleteemployee } = require('../controller/EmployeeController');
-const { getcompanies } = require('../controller/CompanyController');
+const { getcompanies, updatecompanies, deletecompanies } = require('../controller/CompanyController');
 
 // function isAuthenticated(req, res, next) {
 //   if (verifyToken(req)) {

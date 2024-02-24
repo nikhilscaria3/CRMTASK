@@ -8,7 +8,6 @@ const getcompanies = async (req, res) => {
 
         const savedclientcompanies = await Customer.find()
         .sort({ createdAt: -1 }).limit(limit).skip(skipIndex);
-        console.log(savedclientcompanies);
         res.json({
             message: "Companies retrieved successfully",
             companyData: savedclientcompanies,
@@ -21,5 +20,6 @@ const getcompanies = async (req, res) => {
 }
 
 module.exports = {
-    getcompanies
+    getcompanies,
+    
 }

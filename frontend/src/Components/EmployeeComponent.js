@@ -167,7 +167,7 @@ const Employees = () => {
         <div>
             <Navbar /><br />
             <button type="button" class="btn btn-primary mx-auto d-block" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={handleAddUserClick}>
-                ADD USER
+                ADD EMPLOYEE
             </button>
 
 
