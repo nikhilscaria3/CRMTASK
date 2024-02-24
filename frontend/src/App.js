@@ -13,12 +13,11 @@ import Dialer from "./Components/DialerComponent";
 
 const PrivateRoute = ({ element, ...rest }) => {
   return isAuthenticated() ? (
-    <Route {...rest} element={element} />
+    element
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/login" replace={true} />
   );
 };
-
 
 const App = () => {
   return (
@@ -26,24 +25,36 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Signup />} />
+
+        {/* if token exists in local storage redirect user to home page otherwise redirect to login page */}
         <Route
           path="/homepage"
-          element={<Homepage />}
+          element={<PrivateRoute element={<Homepage />} />}
         />
         <Route
           path="/accountinfo"
-          element={<AccountInfo />}
+          element={<PrivateRoute element={<AccountInfo />} />}
         />
         <Route
-          path="/employee" element={<Employees />} />
+          path="/employee"
+          element={<PrivateRoute element={<Employees />} />}
+        />
         <Route
-          path="/companies" element={<Company />} />
+          path="/companies"
+          element={<PrivateRoute element={<Company />} />}
+        />
         <Route
-          path="/dialer" element={<Dialer />} />
+          path="/dialer"
+          element={<PrivateRoute element={<Dialer />} />}
+        />
         <Route
-          path="/clients" element={<Customers />} />
-
-        <Route path="/ticket" element={<ComplaintForm />} />
+          path="/clients"
+          element={<PrivateRoute element={<Customers />} />}
+        />
+        <Route
+          path="/ticket"
+          element={<PrivateRoute element={<ComplaintForm />} />}
+        />
       </Routes>
     </BrowserRouter>
   );

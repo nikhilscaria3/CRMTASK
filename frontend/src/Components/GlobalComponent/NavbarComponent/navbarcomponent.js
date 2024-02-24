@@ -1,10 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import './navbarcomponent.css'
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-
+    const navigate = useNavigate()
+    const handlelogout = () => {
+        localStorage.removeItem("token");
+        navigate('/login')
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container-fluid">
@@ -90,11 +94,14 @@ const Navbar = () => {
                 </div>
 
                 {/* Search Form */}
-     
+
                 {/* Account Dropdown */}
                 <div className="d-flex">
                     <button className="btn btn-outline-success me-2">
                         <Link className="dropdown-item" to="/accountinfo">Account</Link>
+                    </button>
+                    <button className="btn btn-outline-success me-2" onClick={handlelogout}>
+                        <Link className="dropdown-item">Logout</Link>
                     </button>
                 </div>
             </div>
