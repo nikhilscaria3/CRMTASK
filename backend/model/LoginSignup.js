@@ -69,7 +69,7 @@ const customerSchema = new mongoose.Schema({
 
 
 const employeeSchema = new mongoose.Schema({
-    employeeName: {
+    employeename: {
         type: String,
         required: true
     },
@@ -112,6 +112,7 @@ const employeeSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
+        required:true,
         default: Date.now,
     },
     status: {

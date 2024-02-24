@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Navbar from "./GlobalComponent/NavbarComponent/navbarcomponent"
-import { axiosInstance, setAuthToken } from "../util/baseurl"
+import { axiosInstance } from "../util/baseurl"
 import '../Styles/Customers.css'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,7 +16,7 @@ const Employees = () => {
         emailAddress: '',
         companyName: '',
         domain: '',
-        wordmode: '',
+        workmode: '',
         salary: '',
         location: "",
         status: ''
@@ -61,7 +61,7 @@ const Employees = () => {
                     emailAddress,
                     companyName,
                     domain,
-                    wordmode,
+                    workmode,
                     salary,
                     location,
                     status } = newemployee
@@ -73,7 +73,7 @@ const Employees = () => {
                     emailAddress,
                     companyName,
                     domain,
-                    wordmode,
+                    workmode,
                     salary,
                     location,
                     status
@@ -154,7 +154,7 @@ const Employees = () => {
             emailAddress: '',
             companyName: '',
             domain: '',
-            wordmode: '',
+            workmode: '',
             salary: '',
             location: "",
             status: ''
@@ -184,8 +184,8 @@ const Employees = () => {
                         <div class="modal-body">
                             <form onSubmit={handleSubmit}>
                                 <div class="form-group">
-                                    <label class="form-label" for="fullName">Name</label>
-                                    <input type='text' class="form-input" name='fullName' onChange={handleInputChange} placeholder='Name' value={newemployee.fullName} />
+                                    <label class="form-label" for="employeename">Name</label>
+                                    <input type='text' class="form-input" name='employeename' onChange={handleInputChange} placeholder='Employee Name' value={newemployee.employeename} />
                                 </div>
 
                                 <div class="form-group">
@@ -205,13 +205,14 @@ const Employees = () => {
                                     <input type='text' class="form-input" name='companyName' onChange={handleInputChange} placeholder='Company Name' value={newemployee.companyName} />
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label" for="industry">Domain</label>
+                                    <label class="form-label" for="domain">Domain</label>
                                     <input type='text' class="form-input" name='domain' onChange={handleInputChange} placeholder='Domain' value={newemployee.domain} />
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label" for="workmode">Work Mode</label>
                                     <input type='text' class="form-input" name='workmode' onChange={handleInputChange} placeholder='Work Mode' value={newemployee.workmode} />
                                 </div>
+                               
                                 <div class="form-group">
                                     <label class="form-label" for="salary">Salary</label>
                                     <input type='text' class="form-input" name='salary' onChange={handleInputChange} placeholder='Salary' value={newemployee.salary} />

@@ -9,7 +9,7 @@ const createemployee = async (req, res) => {
         emailAddress,
         companyName,
         domain,
-        wordmode,
+        workmode,
         salary,
         location
 
@@ -22,7 +22,7 @@ const createemployee = async (req, res) => {
             emailAddress,
             companyName,
             domain,
-            wordmode,
+            workmode,
             salary,
             location
         });
@@ -43,7 +43,7 @@ const getemployee = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10; // get the number of records per page from query params or set it to 10 if it's not provided
         const skipIndex = (page - 1) * limit; // calculate the index from which to start skipping records
 
-        const savedemployees = await Employee.find().limit(limit).skip(skipIndex);
+        const savedemployees = await Employee.find().sort({ createdAt: -1 }).limit(limit).skip(skipIndex);
        console.log(savedemployees);
         res.json({
             message: "employees retrieved successfully",

@@ -48,23 +48,27 @@ const Dialer = () => {
     };
 
     const handleDialClick = () => {
-        if (phoneNumber.length === 10) {
+        const last10Digits = phoneNumber.replace(/\D/g, '').slice(-10);
+
+        if (last10Digits.length === 10) {
             const telLink = `tel:${phoneNumber}`;
             window.location.href = telLink;
         } else {
-            setMessage("Number must have 10 digits for Call")
+            setMessage("Check the number")
         }
     };
 
     const handleWhatsAppClick = () => {
-        if (phoneNumber.length === 10) {
+        const last10Digits = phoneNumber.replace(/\D/g, '').slice(-10);
+
+        if (last10Digits.length === 10) {
             const whatsappLink = `https://wa.me/${phoneNumber}`;
             window.location.href = whatsappLink;
         } else {
-       
-            setMessage("Number must have 10 digits for WhatsApp.")
+            setMessage("Check the number");
         }
     };
+
 
 
     const handleEmailSend = async () => {
