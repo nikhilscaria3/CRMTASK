@@ -90,10 +90,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Search Form */}
-                <form className="d-flex ms-auto">
-                    <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"></input>
-                </form>
-
+     
                 {/* Account Dropdown */}
                 <div className="d-flex">
                     <button className="btn btn-outline-success me-2">

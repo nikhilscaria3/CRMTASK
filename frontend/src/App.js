@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Login from "./Components/LoginComponent";
 import Signup from "./Components/SignupComponent";
 import Homepage from "./Components/HomePage";
-import AccountInfo from "./Components/AccountInfo";
+import AccountInfo from "./Components/AccountComponent";
 import { isAuthenticated } from "./Auth/UserAuth"; // Import the isAuthenticated function
 import Customers from "./Components/CustomerComponent";
 import ComplaintForm from "./Components/TicketComponent";

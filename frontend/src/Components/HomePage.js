@@ -98,7 +98,7 @@ const Homepage = () => {
                                         <h3>
                                             <CountUp end={count.countofcustomer} duration={2} />
                                         </h3>
-                                        <p>Customer</p>
+                                        <p>Clients</p>
                                     </span>
                                 </a>
                             </li>
